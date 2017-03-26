@@ -20,8 +20,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A class that performs some subnet calculations given a network address and a subnet mask.
- * @see "http://www.faqs.org/rfcs/rfc1519.html"
+ * This class that performs some subnet calculations given IP address in CIDR-notation.
+ * <p>For IPv4 address subnet, especially Classless Inter-Domain Routing (CIDR),
+ * refer to <a href="https://tools.ietf.org/html/rfc4632">RFC4632</a>.</p>
+ * <p>For IPv6 address subnet, refer to <a href="https://tools.ietf.org/html/rfc4291#section-2.3">
+ * Section 2.3 of RFC 4291</a>.</p>
  * @since 2.0
  */
 public class SubnetUtils {
@@ -32,36 +35,50 @@ public class SubnetUtils {
     private static final Pattern cidrPattern = Pattern.compile(SLASH_FORMAT);
     private static final int NBITS = 32;
 
-    private int netmask = 0;
-    private int address = 0;
-    private int network = 0;
-    private int broadcast = 0;
+    private final int netmask;
+    private final int address;
+    private final int network;
+    private final int broadcast;
 
     /** Whether the broadcast/network address are included in host count */
     private boolean inclusiveHostCount = false;
 
+    private static final String IPV4_ADDRESS = "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}";
+    private static final String IPV6_ADDRESS = "([0-9a-f]{1,4}\\:){7}[0-9a-f]{1,4}/\\d{1,3}";
+
+    private final SubnetInfo subnetInfo;
 
     /**
-     * Constructor that takes a CIDR-notation string, e.g. "192.168.0.1/16"
-     * @param cidrNotation A CIDR-notation string, e.g. "192.168.0.1/16"
+     * Constructor that creates subnet summary information based on
+     * the provided IPv4 or IPv6 address in CIDR-notation,
+     * e.g. "192.168.0.1/16" or "2001:db8:0:0:0:ff00:42:8329/46"
+     *
+     * NOTE: IPv6 address does NOT allow to omit consecutive sections of zeros in the current version.
+     *
+     * @param cidrNotation IPv4 or IPv6 address,
+     * e.g. "192.168.0.1/16" or "2001:db8:0:0:0:ff00:42:8329/46"
      * @throws IllegalArgumentException if the parameter is invalid,
-     * i.e. does not match n.n.n.n/m where n=1-3 decimal digits, m is in range 0-32
+     * e.g. does not match either n.n.n.n/m where n = 1-3 decimal digits, m = 1-2 decimal digits in range 0-32; or
+     * n:n:n:n:n:n:n:n/m n = 1-4 hexadecimal digits, m = 1-3 decimal digits in range 0-128.
      */
     public SubnetUtils(String cidrNotation) {
-        calculate(cidrNotation);
+        subnetInfo = getByCIDRNortation(cidrNotation);
     }
 
     /**
-     * Constructor that takes a dotted decimal address and a dotted decimal mask.
-     * @param address An IP address, e.g. "192.168.0.1"
-     * @param mask A dotted decimal netmask e.g. "255.255.0.0"
+     * Constructor that creates IPv4 subnet summary information,
+     * given a dotted decimal address and mask.
+     *
+     * @param address an IP address, e.g. "192.168.0.1"
+     * @param mask a dotted decimal netmask e.g. "255.255.0.0"
      * @throws IllegalArgumentException if the address or mask is invalid,
-     * i.e. does not match n.n.n.n where n=1-3 decimal digits and the mask is not all zeros
+     * e.g. the address does not match n.n.n.n where n=1-3 decimal digits, or
+     * the mask does not match n.n.n.n which n={0, 128, 192, 224, 240, 248, 252, 254, 255}
+     * and after the 0-field, it is all zeros.
      */
     public SubnetUtils(String address, String mask) {
-        calculate(toCidrNotation(address, mask));
+        subnetInfo = new IP4Subnet(address, mask);
     }
-
 
     /**
      * Returns <code>true</code> if the return value of {@link SubnetInfo#getAddressCount()}
@@ -70,7 +87,7 @@ public class SubnetUtils {
      * @return true if the host count includes the network and broadcast addresses
      */
     public boolean isInclusiveHostCount() {
-        return inclusiveHostCount;
+        return subnetInfo.isInclusiveHostCount();
     }
 
     /**
@@ -80,7 +97,43 @@ public class SubnetUtils {
      * @since 2.2
      */
     public void setInclusiveHostCount(boolean inclusiveHostCount) {
-        this.inclusiveHostCount = inclusiveHostCount;
+        subnetInfo.setInclusiveHostCount(inclusiveHostCount);
+    }
+
+    /**
+     * Creates subnet summary information based on the provided IPv4 or IPv6 address in CIDR-notation,
+     * e.g. "192.168.0.1/16" or "2001:db8:0:0:0:ff00:42:8329/46"
+     *
+     * NOTE: IPv6 address does NOT allow to omit consecutive sections of zeros in the current version.
+     *
+     * @param cidrNotation IPv4 or IPv6 address
+     * @return a SubnetInfo object created from the IP address.
+     * @since 3.7
+     */
+    public static SubnetInfo getByCIDRNortation(String cidrNotation) {
+        if (Pattern.matches(IPV4_ADDRESS, cidrNotation)) {
+            return new IP4Subnet(cidrNotation);
+        } else if (Pattern.matches(IPV6_ADDRESS, cidrNotation)) {
+            return new IP6Subnet(cidrNotation);
+        } else {
+            throw new IllegalArgumentException("Could not parse [" + cidrNotation + "]");
+        }
+    }
+
+    /**
+     * Creates IPv4 subnet summary information, given a dotted decimal address and mask.
+     *
+     * @param address an IP address, e.g. "192.168.0.1"
+     * @param mask a dotted decimal netmask e.g. "255.255.0.0"
+     * @throws IllegalArgumentException if the address or mask is invalid,
+     * e.g. the address does not match n.n.n.n where n=1-3 decimal digits, or
+     * the mask does not match n.n.n.n which n={0, 128, 192, 224, 240, 248, 252, 254, 255}
+     * and after the 0-field, it is all zeros.
+     * @return an IP4Subnet object generated based on <code>address</code> and <code>mask</code>.
+     * @since 3.7
+     */
+    public static IP4Subnet getByMask(String address, String mask) {
+        return new IP4Subnet(address, mask);
     }
 
     /**
@@ -300,44 +353,12 @@ public class SubnetUtils {
      * Return a {@link SubnetInfo} instance that contains subnet-specific statistics
      * @return new instance
      */
-    public final SubnetInfo getInfo() { return new SubnetInfo(); }
-
-    /*
-     * Initialize the internal fields from the supplied CIDR mask
-     */
-    private void calculate(String mask) {
-        Matcher matcher = cidrPattern.matcher(mask);
-
-        if (matcher.matches()) {
-            address = matchAddress(matcher);
-
-            /* Create a binary netmask from the number of bits specification /x */
-
-            int trailingZeroes = NBITS - rangeCheck(Integer.parseInt(matcher.group(5)), 0, NBITS);
-            /*
-             * An IPv4 netmask consists of 32 bits, a contiguous sequence 
-             * of the specified number of ones followed by all zeros.
-             * So, it can be obtained by shifting an unsigned integer (32 bits) to the left by
-             * the number of trailing zeros which is (32 - the # bits specification).
-             * Note that there is no unsigned left shift operator, so we have to use
-             * a long to ensure that the left-most bit is shifted out correctly.
-             */
-            netmask = (int) (0x0FFFFFFFFL << trailingZeroes );
-
-            /* Calculate base network address */
-            network = (address & netmask);
-
-            /* Calculate broadcast address */
-            broadcast = network | ~(netmask);
-        } else {
-            throw new IllegalArgumentException("Could not parse [" + mask + "]");
-        }
-    }
+    public final SubnetInfo getInfo() { return subnetInfo; }
 
     /*
      * Convert a dotted decimal format address to a packed integer format
      */
-    private int toInteger(String address) {
+    private static int toInteger(String address) {
         Matcher matcher = addressPattern.matcher(address);
         if (matcher.matches()) {
             return matchAddress(matcher);
@@ -350,7 +371,7 @@ public class SubnetUtils {
      * Convenience method to extract the components of a dotted decimal address and
      * pack into an integer using a regex match
      */
-    private int matchAddress(Matcher matcher) {
+    private static int matchAddress(Matcher matcher) {
         int addr = 0;
         for (int i = 1; i <= 4; ++i) {
             int n = (rangeCheck(Integer.parseInt(matcher.group(i)), 0, 255));
@@ -389,7 +410,7 @@ public class SubnetUtils {
      * Checks if a value x is in the range [begin,end].
      * Returns x if it is in range, throws an exception otherwise.
      */
-    private int rangeCheck(int value, int begin, int end) {
+    private static int rangeCheck(int value, int begin, int end) {
         if (value >= begin && value <= end) { // (begin,end]
             return value;
         }
@@ -410,25 +431,4 @@ public class SubnetUtils {
         return x & 0x0000003F;
     }
 
-    /*
-     * Convert two dotted decimal addresses to a single xxx.xxx.xxx.xxx/yy format
-     * by counting the 1-bit population in the mask address. (It may be better to count
-     * NBITS-#trailing zeroes for this case)
-     */
-    private String toCidrNotation(String addr, String mask) {
-        int maskInt = toInteger(mask);
-
-        /*
-         * Check the subnet mask
-         *
-         * An IPv4 subnet mask must consist of a set of contiguous 1-bits followed by a block of 0-bits.
-         * If the mask follows the format, the numbers of subtracting one from the lowest one bit of the mask,
-         * see Hacker's Delight section 2.1, equals to the bitwise complement of the mask.
-         */
-        if ((maskInt & -maskInt) - 1 != ~maskInt) {
-            throw new IllegalArgumentException("Could not parse [" + mask + "]");
-        }
-
-        return addr + "/" + pop(maskInt);
-    }
 }
