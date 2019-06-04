@@ -77,14 +77,14 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
         int index = cidr / 16;
         System.arraycopy(ip6Address, 0, highAddr, 0, index + 1);
 
+        // Set the out of the network prefix bits
+        highAddr[index] |= 0xffff >> (cidr % 16);
+
         // Fill the following fields with 1-bits
         for (int i = index + 1; i < 8; i++)
         {
             highAddr[i] = 0xffff;
         }
-
-        // Set the out of the network prefix bits
-        highAddr[index] |= 0xffff >> (cidr % 16);
 
         return highAddr;
     }
@@ -242,7 +242,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     @Override
     public String getAddressCountString()
     {
-        return new BigInteger("2").pow(128 - cidr).toString();
+        return BigInteger.valueOf(2).pow(128 - cidr).toString();
     }
 
     /**
@@ -256,7 +256,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
-        buf.append("CIDR-Notation:\t[").append(getCIDRNotation()).append("]")
+        buf.append("CIDR-Notation:\t[").append(getCIDRNotation()).append("]\n")
         .append("First Address:\t[").append(getLowAddress()).append("]\n")
         .append("Last Address:\t[").append(getHighAddress()).append("]\n")
         .append("# Addresses:\t[").append(getAddressCountString()).append("]\n");
