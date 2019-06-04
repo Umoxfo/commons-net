@@ -17,8 +17,6 @@
 package org.apache.commons.net.util;
 
 import java.math.BigInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Convenience container for IPv6 subnet summary information.
@@ -29,7 +27,6 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
 {
 
     private static final int NBITS = 128;
-    private static final String ZERO_FIELDS = "(0\\:){2,}";
 
     private final int[] ip6Address;
     private final int cidr;
@@ -107,28 +104,51 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
      */
     private String format(int[] val)
     {
-        String address = format(val, ":");
-
-        /* The longest run of consecutive 0 fields MUST be shortened based on RFC 5952. */
-        String regex = "";
-        int maxLength = 0;
-
         // Find the longest zero fields
-        Matcher match = Pattern.compile(ZERO_FIELDS).matcher(address);
-        while (match.find())
+        int fromIndex = -1;
+        int toIndex = -1;
+        int maxCnt = 0;
+        for (int i = 0; i < 8; i++)
         {
-            String reg = match.group();
-            int len = reg.length();
-
-            if (maxLength < len)
+            if (val[i] == 0)
             {
-                regex = reg;
-                maxLength = len;
+                int j = i + 1;
+                while ((j < 8) && (val[j] == 0))
+                {
+                    j++;
+                }
+
+                int cnt = j - i;
+                if (maxCnt < cnt)
+                {
+                    fromIndex = i;
+                    toIndex = j;
+                    maxCnt = cnt;
+                }
+
+                i = j;
             }
         }
 
         // Remove all leading zeroes
-        return address.replace(regex, ":");
+        StringBuilder sb = new StringBuilder(39);
+        for (int i = 0; i < 8; i++)
+        {
+            if (i == fromIndex)
+            {
+                sb.append(':');
+                i = toIndex - 1;
+                continue;
+            }
+
+            sb.append(Integer.toHexString(val[i]));
+            if (i < 7)
+            {
+                sb.append(':');
+            }
+        }
+
+        return sb.toString();
     }
 
     /**
