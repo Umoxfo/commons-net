@@ -106,10 +106,10 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns <code>true</code> if the return value of {@link #getAddressCountLong() getAddressCountLong}
+     * Returns {@code true} if the return value of {@link #getAddressCountLong() getAddressCountLong}
      * includes the network and broadcast addresses.
      *
-     * @return true if the host count includes the network and broadcast addresses
+     * @return {@code true} if the host count includes the network and broadcast addresses
      */
     @Override
     public boolean isInclusiveHostCount()
@@ -118,10 +118,10 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Sets to <code>true</code> if you want the return value of {@link #getAddressCountLong() getAddressCountLong}
+     * Sets to {@code true} if you want the return value of {@link #getAddressCountLong() getAddressCountLong}
      * to include the network and broadcast addresses.
      *
-     * @param inclusiveHostCount true if network and broadcast addresses are to be included
+     * @param inclusiveHostCount {@code true} if network and broadcast addresses are to be included
      */
     @Override
     public void setInclusiveHostCount(boolean inclusiveHostCount)
@@ -215,11 +215,11 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
      * This excludes the network and broadcast addresses.
      *
      * @param address a dot-delimited IPv4 address, e.g. "192.168.0.1"
-     * @return true if in range, false otherwise
+     * @return {@code true} if in range, {@code false} otherwise
      */
     @Override
     public boolean isInRange(String address)
@@ -228,11 +228,11 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
      * This excludes the network and broadcast addresses.
      *
      * @param address an IPv4 address in binary
-     * @return true if in range, false otherwise
+     * @return {@code true} if in range, {@code false} otherwise
      */
     @Override
     public boolean isInRange(int address)
@@ -296,7 +296,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the lowest address as a dotted decimal IPv4 address.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is {@code false}.
      *
      * @return the IP address in the dotted decimal format, may be "0.0.0.0" if there is no valid address
      */
@@ -308,7 +308,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the highest address as a dotted decimal IPv4 address.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is {@code false}.
      *
      * @return the IP address in dotted decimal format, may be "0.0.0.0" if there is no valid address
      */
@@ -320,7 +320,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the count of available addresses.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is {@code false}.
      *
      * @return the count of addresses in a string, may be zero
      */
@@ -332,7 +332,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the count of available addresses.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is {@code false}.
      *
      * @return the count of addresses, may be zero
      */

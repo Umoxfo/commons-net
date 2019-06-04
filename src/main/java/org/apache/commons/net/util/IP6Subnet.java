@@ -154,10 +154,10 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
      *
      * @param address a colon-delimited address, e.g. "2001:db8:0:0:0:ff00:42:8329"
-     * @return true if in range, false otherwise
+     * @return {@code true} if in range, {@code false} otherwise
      */
     @Override
     public boolean isInRange(String address)
@@ -166,10 +166,10 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
      *
      * @param address an IPv6 address in binary
-     * @return true if in range, false otherwise
+     * @return {@code true} if in range, {@code false} otherwise
      */
     @Override
     public boolean isInRange(int[] address)
@@ -195,7 +195,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns the <code>address</code>, that is the colon 16-bit delimited hexadecimal format for IPv6 addresses,
+     * Returns the {@code address}, that is the colon 16-bit delimited hexadecimal format for IPv6 addresses,
      * e.g. "2001:db8::ff00:42:8329".
      *
      * @return a string of the IP address

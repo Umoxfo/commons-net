@@ -74,10 +74,10 @@ public class SubnetUtils
     }
 
     /**
-     * Returns <code>true</code> if the return value of {@link SubnetInfo#getAddressCountLong() getAddressCountLong}
+     * Returns {@code true} if the return value of {@link SubnetInfo#getAddressCountLong() getAddressCountLong}
      * includes the network and broadcast addresses.
      *
-     * @return true if the host count includes the network and broadcast addresses
+     * @return {@code true} if the host count includes the network and broadcast addresses
      * @since 2.2
      */
     public boolean isInclusiveHostCount()
@@ -86,10 +86,10 @@ public class SubnetUtils
     }
 
     /**
-     * Set to <code>true</code> if you want the return value of {@link SubnetInfo#getAddressCountLong() getAddressCountLong}
+     * Set to {@code true} if you want the return value of {@link SubnetInfo#getAddressCountLong() getAddressCountLong}
      * to include the network and broadcast addresses.
      *
-     * @param inclusiveHostCount true if network and broadcast addresses are to be included
+     * @param inclusiveHostCount {@code true} if network and broadcast addresses are to be included
      * @since 2.2
      */
     public void setInclusiveHostCount(boolean inclusiveHostCount)
@@ -104,7 +104,7 @@ public class SubnetUtils
      * NOTE: IPv6 address does NOT allow to omit consecutive sections of zeros in the current version.
      *
      * @param cidrNotation IPv4 or IPv6 address
-     * @return a {@code SubnetInfo} object created from the IP address.
+     * @return a {@link SubnetInfo SubnetInfo} object created from the IP address.
      * @since 3.7
      */
     public static SubnetInfo getByCIDRNotation(String cidrNotation)
@@ -126,7 +126,7 @@ public class SubnetUtils
      *
      * @param address an IP address, e.g. "192.168.0.1"
      * @param mask a dotted decimal netmask e.g. "255.255.0.0"
-     * @return an IP4Subnet object generated based on <code>address</code> and <code>mask</code>.
+     * @return an {@link IP4Subnet} object generated based on {@code address} and {@code mask}.
      * @throws IllegalArgumentException if the address or mask is invalid,
      * e.g. the address does not match n.n.n.n where n=1-3 decimal digits, or
      * the mask does not match n.n.n.n which n={0, 128, 192, 224, 240, 248, 252, 254, 255} and after the 0-field, it is all zeros.
@@ -180,48 +180,45 @@ public class SubnetUtils
         public int asInteger(String address) { return 0; }
 
         /**
-         * Returns <code>true</code> if the return value of {@link #getAddressCountLong() getAddressCountLong}
+         * Returns {@code true} if the return value of {@link #getAddressCountLong() getAddressCountLong}
          * includes the network and broadcast addresses. (ONLY USE in IPv4)
          *
-         * @return true if the host count includes the network and broadcast addresses
+         * @return {@code true} if the host count includes the network and broadcast addresses
          */
         public boolean isInclusiveHostCount() { return false; }
 
         /**
-         * Sets to <code>true</code> if you want the return value of {@link #getAddressCountLong() getAddressCountLong}
+         * Sets to {@code true} if you want the return value of {@link #getAddressCountLong() getAddressCountLong}
          * to include the network and broadcast addresses. (ONLY USE in IPv4)
          *
-         * @param inclusiveHostCount true if network and broadcast addresses are to be included
+         * @param inclusiveHostCount {@code true} if network and broadcast addresses are to be included
          */
         public void setInclusiveHostCount(boolean inclusiveHostCount) {}
 
         /**
-         * Returns <code>true</code> if the parameter <code>address</code> is
-         * in the range of usable endpoint addresses for this subnet.
+         * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
          * This excludes the network and broadcast addresses if the address is IPv4 address.
          *
-         * @param address a dot-delimited IPv4 address, e.g. "192.168.0.1", or a colon-hexadecimal IPv6 address,
-         * e.g. "2001:db8::ff00:42:8329"
-         * @return true if in range, false otherwise
+         * @param address a dot-delimited IPv4 address, e.g. "192.168.0.1", or
+         * a colon-hexadecimal IPv6 address, e.g. "2001:db8::ff00:42:8329"
+         * @return {@code true} if in range, {@code false} otherwise
          */
         public boolean isInRange(String address) { return false; }
 
         /**
-         * Returns <code>true</code> if the parameter <code>address</code> is
-         * in the range of usable endpoint addresses for this subnet.
+         * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
          * This excludes the network and broadcast addresses if the address is IPv4 address.
          *
          * @param address the address to check
-         * @return true if it is in range
+         * @return {@code true} if it is in range
          */
         public boolean isInRange(int address) { return false; }
 
         /**
-         * Returns <code>true</code> if the parameter <code>address</code> is
-         * in the range of usable endpoint addresses for this subnet.
+         * Returns {@code true} if the parameter {@code address} is in the range of usable endpoint addresses for this subnet.
          *
          * @param address the address to check
-         * @return true if it is in range
+         * @return {@code true} if it is in range
          */
         public boolean isInRange(int[] address) { return false; }
 
@@ -294,7 +291,7 @@ public class SubnetUtils
 
         /**
          * Returns the lowest address as a dotted decimal or the colon-separated hexadecimal IP address.
-         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the inclusive flag is <code>false</code>.
+         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the {@code inclusiveHostCount} flag is {@code false}.
          *
          * @return the IP address in dotted or colon 16-bit delimited format, may be "0.0.0.0" or "::" if there is no valid address
          */
@@ -302,7 +299,7 @@ public class SubnetUtils
 
         /**
          * Returns the highest address as the dotted decimal or the colon-separated hexadecimal IP address.
-         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the inclusive flag is <code>false</code>.
+         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the {@code inclusiveHostCount} flag is {@code false}.
          *
          * @return the IP address in dotted or colon 16-bit delimited format, may be "0.0.0.0" or "::" if there is no valid address
          */
@@ -310,7 +307,7 @@ public class SubnetUtils
 
         /**
          * Get the count of available addresses.
-         * Will be zero for CIDR/31 and CIDR/32 if the inclusive flag is false.
+         * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is {@code false}.
          *
          * @return the count of addresses, may be zero.
          * @throws RuntimeException if the correct count is greater than {@code Integer.MAX_VALUE}
@@ -330,7 +327,7 @@ public class SubnetUtils
 
         /**
          * Returns the count of available addresses.
-         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the inclusiveHostCount flag is <code>false</code>.
+         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the {@code inclusiveHostCount} flag is {@code false}.
          *
          * @return the count of addresses, may be zero
          */
@@ -338,7 +335,7 @@ public class SubnetUtils
 
         /**
          * Returns the count of available addresses.
-         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the inclusiveHostCount flag is <code>false</code>.
+         * Will be zero for CIDR/31 and CIDR/32 if the address is IPv4 address and the {@code inclusiveHostCount} flag is {@code false}.
          *
          * @return the count of addresses in a string, may be zero
          */
@@ -354,7 +351,7 @@ public class SubnetUtils
     }
 
     /**
-     * Return a {@link SubnetInfo} instance that contains subnet-specific statistics
+     * Return a {@link SubnetInfo SubnetInfo} instance that contains subnet-specific statistics
      *
      * @return new instance
      */
