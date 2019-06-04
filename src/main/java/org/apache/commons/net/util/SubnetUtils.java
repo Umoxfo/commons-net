@@ -26,7 +26,8 @@ import java.util.regex.Pattern;
  * Section 2.3 of RFC 4291</a>.</p>
  * @since 2.0
  */
-public class SubnetUtils {
+public class SubnetUtils
+{
 
     private static final String IPV4_ADDRESS = "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}";
     private static final String IPV6_ADDRESS = "(([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}|"
@@ -54,8 +55,9 @@ public class SubnetUtils {
      * e.g. does not match either n.n.n.n/m where n = 1-3 decimal digits, m = 1-2 decimal digits in range 0-32; or
      * n:n:n:n:n:n:n:n/m n = 1-4 hexadecimal digits, m = 1-3 decimal digits in range 0-128.
      */
-    public SubnetUtils(String cidrNotation) {
-        subnetInfo = getByCIDRNortation(cidrNotation);
+    public SubnetUtils(String cidrNotation)
+    {
+        subnetInfo = getByCIDRNotation(cidrNotation);
     }
 
     /**
@@ -69,7 +71,8 @@ public class SubnetUtils {
      * the mask does not match n.n.n.n which n={0, 128, 192, 224, 240, 248, 252, 254, 255}
      * and after the 0-field, it is all zeros.
      */
-    public SubnetUtils(String address, String mask) {
+    public SubnetUtils(String address, String mask)
+    {
         subnetInfo = new IP4Subnet(address, mask);
     }
 
@@ -79,7 +82,8 @@ public class SubnetUtils {
      * @return true if the host count includes the network and broadcast addresses
      * @since 2.2
      */
-    public boolean isInclusiveHostCount() {
+    public boolean isInclusiveHostCount()
+    {
         return subnetInfo.isInclusiveHostCount();
     }
 
@@ -89,7 +93,8 @@ public class SubnetUtils {
      * @param inclusiveHostCount true if network and broadcast addresses are to be included
      * @since 2.2
      */
-    public void setInclusiveHostCount(boolean inclusiveHostCount) {
+    public void setInclusiveHostCount(boolean inclusiveHostCount)
+    {
         subnetInfo.setInclusiveHostCount(inclusiveHostCount);
     }
 
@@ -103,12 +108,16 @@ public class SubnetUtils {
      * @return a SubnetInfo object created from the IP address.
      * @since 3.7
      */
-    public static SubnetInfo getByCIDRNortation(String cidrNotation) {
-        if (Pattern.matches(IPV4_ADDRESS, cidrNotation)) {
+    public static SubnetInfo getByCIDRNotation(String cidrNotation)
+    {
+        if (Pattern.matches(IPV4_ADDRESS, cidrNotation))
+        {
             return new IP4Subnet(cidrNotation);
-        } else if (Pattern.matches(IPV6_ADDRESS, cidrNotation)) {
+        } else if (Pattern.matches(IPV6_ADDRESS, cidrNotation))
+        {
             return new IP6Subnet(cidrNotation);
-        } else {
+        } else
+        {
             throw new IllegalArgumentException("Could not parse [" + cidrNotation + "]");
         }
     }
@@ -125,7 +134,8 @@ public class SubnetUtils {
      * @return an IP4Subnet object generated based on <code>address</code> and <code>mask</code>.
      * @since 3.7
      */
-    public static IP4Subnet getByMask(String address, String mask) {
+    public static IP4Subnet getByMask(String address, String mask)
+    {
         return new IP4Subnet(address, mask);
     }
 
@@ -133,15 +143,18 @@ public class SubnetUtils {
      * Convenience container for subnet summary information.
      * @since 3.7 (reorganized)
      */
-    public static class SubnetInfo {
+    public static class SubnetInfo
+    {
 
         /*
          * Convenience function to check integer boundaries. Checks if a value x
          * is in the range [begin,end]. Returns x if it is in range, throws an
          * exception otherwise.
          */
-        static int rangeCheck(int value, int begin, int end) {
-            if (value < begin || value > end) {
+        static int rangeCheck(int value, int begin, int end)
+        {
+            if (value < begin || value > end)
+            {
                 throw new IllegalArgumentException("Value [" + value + "] not in range [" + begin + "," + end + "]");
             }
 
@@ -152,7 +165,8 @@ public class SubnetUtils {
          * Count the number of 1-bits in a 32-bit integer using a
          * divide-and-conquer strategy see Hacker's Delight section 5.1
          */
-        static int pop(int x) {
+        static int pop(int x)
+        {
             x = x - ((x >>> 1) & 0x55555555);
             x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
             x = (x + (x >>> 4)) & 0x0F0F0F0F;
@@ -289,7 +303,8 @@ public class SubnetUtils {
          *
          * @return the CIDR notation of the address
          */
-        public String getCidrSignature() {
+        public String getCidrSignature()
+        {
             return getCIDRNotation();
         }
 
@@ -323,13 +338,15 @@ public class SubnetUtils {
          * @deprecated (3.4) use {@link #getAddressCountLong()} instead
          */
         @Deprecated
-        public int getAddressCount() {
+        public int getAddressCount()
+        {
             long countLong = getAddressCountLong();
-            if (countLong > Integer.MAX_VALUE) {
+            if (countLong > Integer.MAX_VALUE)
+            {
                 throw new RuntimeException("Count is larger than an integer: " + countLong);
             }
             // N.B. cannot be negative
-            return (int)countLong;
+            return (int) countLong;
         }
 
         /**
