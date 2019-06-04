@@ -20,6 +20,7 @@ import java.math.BigInteger;
 
 /**
  * Convenience container for IPv6 subnet summary information.
+ *
  * @see <a href="https://tools.ietf.org/html/rfc4291#section-2.3">https://tools.ietf.org/html/rfc4291#section-2.3</a>
  * @since 3.7
  */
@@ -34,7 +35,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     /**
      * Constructor that takes an IPv6 address in CIDR-notation, e.g. "2001:db8:0:0:0:ff00:42:8329/48".
      *
-     * @param  cidrNotation an IPv6 address in CIDR-notation
+     * @param cidrNotation an IPv6 address in CIDR-notation
      */
     public IP6Subnet(String cidrNotation)
     {
@@ -101,6 +102,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
 
     /*
      * Converts a packed integer address into the colon-separated hexadecimal format.
+     * The longest run of consecutive 0 fields MUST be shortened based on RFC 5952.
      */
     private String format(int[] val)
     {
@@ -152,8 +154,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is
-     * in the range of usable endpoint addresses for this subnet.
+     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
      *
      * @param address a colon-delimited address, e.g. "2001:db8:0:0:0:ff00:42:8329"
      * @return true if in range, false otherwise
@@ -165,8 +166,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is
-     * in the range of usable endpoint addresses for this subnet.
+     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
      *
      * @param address an IPv6 address in binary
      * @return true if in range, false otherwise
@@ -188,15 +188,15 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
             }
         }
 
-        //The host identifier is in range between the lowest and the hightest addresses
+        //The host identifier is in range between the lowest and the highest addresses
         int addr = address[prefixSize];
 
         return (addr >= lowAddress[prefixSize]) && (addr <= highAddress[prefixSize]);
     }
 
     /**
-     * Returns the <code>address</code>, that is the colon 16-bit delimited hexadecimal format
-     * for IPv6 addresses, e.g. "2001:db8::ff00:42:8329".
+     * Returns the <code>address</code>, that is the colon 16-bit delimited hexadecimal format for IPv6 addresses,
+     * e.g. "2001:db8::ff00:42:8329".
      *
      * @return a string of the IP address
      */
@@ -233,8 +233,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     /**
      * Returns the lowest address as a colon-separated IPv6 address.
      *
-     * @return the IP address in a colon 16-bit delimited hexadecimal format,
-     * may be "::" if there is no valid address
+     * @return the IP address in a colon 16-bit delimited hexadecimal format, may be "::" if there is no valid address
      */
     @Override
     public String getLowAddress()
@@ -245,8 +244,7 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
     /**
      * Returns the highest address as a colon-separated IPv6 address.
      *
-     * @return the IP address in a colon 16-bit delimited hexadecimal format,
-     * may be "::" if there is no valid address
+     * @return the IP address in a colon 16-bit delimited hexadecimal format, may be "::" if there is no valid address
      */
     @Override
     public String getHighAddress()
@@ -267,9 +265,9 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns subnet summary information of the address,
-     * which includes an IP address by CIDR-Notation, the first and
-     * the last addresses of the network, and the number of available addresses
-     * in the network which includes all-zero and all-ones in the host fields,
+     * which includes an IP address by CIDR-Notation,
+     * the first and the last addresses of the network,
+     * and the number of available addresses in the network which includes all-zero and all-ones in the host fields,
      * known as network or broadcast addresses.
      */
     @Override
@@ -283,5 +281,4 @@ public final class IP6Subnet extends SubnetUtils.SubnetInfo
 
         return buf.toString();
     }
-
 }

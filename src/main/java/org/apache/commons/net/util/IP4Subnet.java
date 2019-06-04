@@ -18,6 +18,7 @@ package org.apache.commons.net.util;
 
 /**
  * Convenience container for IPv4 subnet summary information.
+ *
  * @see <a href="https://tools.ietf.org/html/rfc4632">https://tools.ietf.org/html/rfc4632</a>
  * @since 3.7
  */
@@ -34,7 +35,9 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     private final int network;
     private final int broadcast;
 
-    /** Whether the broadcast/network addresses are included in host count */
+    /**
+     * Whether the broadcast/network addresses are included in host count
+     */
     private boolean inclusiveHostCount = false;
 
     /**
@@ -103,7 +106,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns <code>true</code> if the return value of {@link #getAddressCount()}
+     * Returns <code>true</code> if the return value of {@link #getAddressCountLong() getAddressCountLong}
      * includes the network and broadcast addresses.
      *
      * @return true if the host count includes the network and broadcast addresses
@@ -115,7 +118,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Sets to <code>true</code> if you want the return value of {@link #getAddressCount()}
+     * Sets to <code>true</code> if you want the return value of {@link #getAddressCountLong() getAddressCountLong}
      * to include the network and broadcast addresses.
      *
      * @param inclusiveHostCount true if network and broadcast addresses are to be included
@@ -212,9 +215,8 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the
-     * range of usable endpoint addresses for this subnet. This excludes the
-     * network and broadcast addresses.
+     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * This excludes the network and broadcast addresses.
      *
      * @param address a dot-delimited IPv4 address, e.g. "192.168.0.1"
      * @return true if in range, false otherwise
@@ -226,9 +228,8 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns true if the parameter <code>address</code> is in the
-     * range of usable endpoint addresses for this subnet. This excludes the
-     * network and broadcast addresses.
+     * Returns true if the parameter <code>address</code> is in the range of usable endpoint addresses for this subnet.
+     * This excludes the network and broadcast addresses.
      *
      * @param address an IPv4 address in binary
      * @return true if in range, false otherwise
@@ -253,8 +254,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
     }
 
     /**
-     * Returns the CIDR suffixes, the count of consecutive 1 bits in the subnet mask
-     * in range of 0-32.
+     * Returns the CIDR suffixes, the count of consecutive 1 bits in the subnet mask in range of 0-32.
      *
      * @return the CIDR suffixes of the address in an integer.
      */
@@ -296,7 +296,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the lowest address as a dotted decimal IPv4 address.
-     * Will be zero for CIDR/31 and CIDR/32 if the inclusive flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
      *
      * @return the IP address in the dotted decimal format, may be "0.0.0.0" if there is no valid address
      */
@@ -308,7 +308,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the highest address as a dotted decimal IPv4 address.
-     * Will be zero for CIDR/31 and CIDR/32 if the inclusive flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
      *
      * @return the IP address in dotted decimal format, may be "0.0.0.0" if there is no valid address
      */
@@ -320,7 +320,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the count of available addresses.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@link inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
      *
      * @return the count of addresses in a string, may be zero
      */
@@ -332,7 +332,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
     /**
      * Returns the count of available addresses.
-     * Will be zero for CIDR/31 and CIDR/32 if the {@link inclusiveHostCount} flag is <code>false</code>.
+     * Will be zero for CIDR/31 and CIDR/32 if the {@code inclusiveHostCount} flag is <code>false</code>.
      *
      * @return the count of addresses, may be zero
      */
@@ -371,7 +371,7 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
      * which includes an IP address by CIDR-Notation with the netmask,
      * network address, broadcast address, the first and last addresses of the network,
      * and the number of available addresses in the network which includes
-     * the network and broadcast addresses if the inclusive flag is true.
+     * the network and broadcast addresses if the {@code inclusiveHostCount} flag is {@code true}.
      */
     @Override
     public String toString()
@@ -387,5 +387,4 @@ public final class IP4Subnet extends SubnetUtils.SubnetInfo
 
         return buf.toString();
     }
-
 }
